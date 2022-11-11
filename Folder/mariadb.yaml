@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-mariadb
+  labels:
+    app: mariadb
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "root"
+        image: mariadb:10.4
+        ports:
+        - containerPort: 3306
+        resources: {}
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb-svc
+  labels :
+    app: mariadb
+spec:
+  type: ClusterIP
+  selector:
+    app: mariadb
+  ports:
+  - name: http
+    port : 3306
+    targetPort: 3306
